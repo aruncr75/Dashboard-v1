@@ -1,0 +1,66 @@
+.glass-card {
+  @apply bg-white bg-opacity-20 backdrop-blur-lg rounded-xl border border-white border-opacity-20 shadow-lg;
+}
+
+.page-transition {
+  @apply animate-fade-in;
+}
+
+/* Sidebar animations */
+.sidebar-icon {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.sidebar-icon:hover {
+  @apply transform scale-110;
+}
+
+.sidebar-text {
+  @apply transition-all duration-300 ease-in-out opacity-100;
+}
+
+[data-state="collapsed"] .sidebar-text {
+  @apply opacity-0 hidden;
+}
+
+[data-state="collapsed"] .sidebar-trigger {
+  @apply w-full justify-center;
+}
+
+/* Animated gradient text */
+.animated-gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r;
+  background-size: 200% 200%;
+  animation: gradient 8s ease infinite, wave 3s ease-in-out infinite;
+  background-image: linear-gradient(45deg, 
+    #06b6d4 0%, 
+    #3b82f6 25%, 
+    #06b6d4 50%, 
+    #3b82f6 75%, 
+    #06b6d4 100%
+  );
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: skewX(0deg);
+  }
+  25% {
+    transform: skewX(-12deg);
+  }
+  75% {
+    transform: skewX(12deg);
+  }
+}
