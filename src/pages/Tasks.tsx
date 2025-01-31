@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus, CheckCircle2, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { CreateTaskDialog } from "@/components/tasks/CreateTaskDialog";
+import { useTasks } from "@/hooks/useTasks";
 
 interface Task {
   id: number;
@@ -32,19 +33,7 @@ const getStatusIcon = (status: string) => {
 };
 
 const Tasks = () => {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-
-  const handleCreateTask = (newTask: { title: string; status: string }) => {
-    const progress = newTask.status === "Completed" ? 100 : 
-                    newTask.status === "In Progress" ? 30 : 0;
-    
-    setTasks(prevTasks => [...prevTasks, {
-      id: Math.max(0, ...prevTasks.map(t => t.id)) + 1,
-      title: newTask.title,
-      status: newTask.status,
-      progress
-    }]);
-  };
+  const { tasks, addTask } = useTasks();
 
   return (
     <Layout>
@@ -59,7 +48,7 @@ const Tasks = () => {
         </div>
 
         <div className="flex justify-end">
-          <CreateTaskDialog onTaskCreate={handleCreateTask} />
+          <CreateTaskDialog onTaskCreate={addTask} />
         </div>
 
         <div className="grid gap-4">
