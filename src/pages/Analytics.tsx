@@ -29,13 +29,13 @@ const lineData = [
 ];
 
 const barData = [
-  { day: "Mon", tasks: 3 },
-  { day: "Tue", tasks: 5 },
-  { day: "Wed", tasks: 2 },
-  { day: "Thu", tasks: 7 },
-  { day: "Fri", tasks: 4 },
-  { day: "Sat", tasks: 3 },
-  { day: "Sun", tasks: 6 },
+  { day: "Mon", tasks: 3, inProgress: 2 },
+  { day: "Tue", tasks: 5, inProgress: 3 },
+  { day: "Wed", tasks: 2, inProgress: 1 },
+  { day: "Thu", tasks: 7, inProgress: 4 },
+  { day: "Fri", tasks: 4, inProgress: 2 },
+  { day: "Sat", tasks: 3, inProgress: 1 },
+  { day: "Sun", tasks: 6, inProgress: 3 },
 ];
 
 const pieData = [
@@ -109,7 +109,8 @@ const Analytics = () => {
                       borderRadius: '8px'
                     }}
                   />
-                  <Bar dataKey="tasks" fill="#06b6d4" />
+                  <Bar dataKey="tasks" fill="#06b6d4" name="Total Tasks" />
+                  <Bar dataKey="inProgress" fill="#0ea5e9" name="In Progress" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
