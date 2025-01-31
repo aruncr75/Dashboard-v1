@@ -1,10 +1,19 @@
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus, CheckCircle2, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
+import { CreateTaskDialog } from "@/components/tasks/CreateTaskDialog";
 
-const tasks = [
+interface Task {
+  id: number;
+  title: string;
+  status: string;
+  progress: number;
+}
+
+const initialTasks = [
   { id: 1, title: "Update documentation", status: "Completed", progress: 100 },
   { id: 2, title: "Review pull requests", status: "Todo", progress: 0 },
   { id: 3, title: "Prepare presentation", status: "In Progress", progress: 30 },
@@ -23,6 +32,20 @@ const getStatusIcon = (status: string) => {
 };
 
 const Tasks = () => {
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+
+  const handleCreateTask = (newTask: { title: string; status: string }) => {
+    const progress = newTask.status === "Completed" ? 100 : 
+                    newTask.status === "In Progress" ? 30 : 0;
+    
+    setTasks(prevTasks => [...prevTasks, {
+      id: Math.max(0, ...prevTasks.map(t => t.id)) + 1,
+      title: newTask.title,
+      status: newTask.status,
+      progress
+    }]);
+  };
+
   return (
     <Layout>
       <div className="space-y-4 animate-fade-in pb-20 md:pb-0">
@@ -36,10 +59,7 @@ const Tasks = () => {
         </div>
 
         <div className="flex justify-end">
-          <Button className="animate-fade-in">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Task
-          </Button>
+          <CreateTaskDialog onTaskCreate={handleCreateTask} />
         </div>
 
         <div className="grid gap-4">
