@@ -13,6 +13,7 @@ import {
   Area,
   AreaChart,
 } from "recharts";
+import { CountdownTimer } from "@/components/CountdownTimer";
 
 const data = [
   { name: "Mon", tasks: 4 },
@@ -64,6 +65,10 @@ const Dashboard = () => {
               </div>
             </Card>
           ))}
+        </div>
+
+        <div className="grid grid-cols-1 gap-6">
+          <CountdownTimer />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
