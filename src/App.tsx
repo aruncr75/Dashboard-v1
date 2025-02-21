@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Index";
 import Tasks from "./pages/Tasks";
 import Analytics from "./pages/Analytics";
+import Routine from "./pages/Routine"; // Added import
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/" element={<Dashboard />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/routine" element={<Routine />} /> {/* Added routine route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

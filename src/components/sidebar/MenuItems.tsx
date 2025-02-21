@@ -1,4 +1,4 @@
-import { Home, BarChart, CheckSquare } from "lucide-react";
+import { Home, BarChart, CheckSquare, Repeat } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   SidebarMenu,
@@ -10,6 +10,7 @@ export const menuItems = [
   { title: "Dashboard", icon: Home, path: "/" },
   { title: "Tasks", icon: CheckSquare, path: "/tasks" },
   { title: "Analytics", icon: BarChart, path: "/analytics" },
+  { title: "Routine", icon: Repeat, path: "/routine" },
 ];
 
 export function MenuItems() {
