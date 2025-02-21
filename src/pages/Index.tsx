@@ -80,7 +80,13 @@ const Dashboard = () => {
                 <div key={task.id} className="bg-black/20 rounded-lg p-3 animate-fade-in hover:bg-black/30 transition-colors duration-300">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <CheckCircle2 className={`w-5 h-5 ${task.status === "Completed" ? "text-cyan-500" : "text-gray-600"}`} />
+                      {task.status === "Completed" ? (
+                        <CheckCircle2 className="w-5 h-5 text-cyan-500" />
+                      ) : task.status === "In Progress" ? (
+                        <Clock className="w-5 h-5 text-blue-400" />
+                      ) : (
+                        <ListTodo className="w-5 h-5 text-yellow-400" />
+                      )}
                       <span className="text-gray-300">{task.title}</span>
                     </div>
                   </div>
