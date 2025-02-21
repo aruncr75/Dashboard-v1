@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,21 +5,7 @@ import { ArrowLeft, Plus, CheckCircle2, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { CreateTaskDialog } from "@/components/tasks/CreateTaskDialog";
 import { DeleteTaskDialog } from "@/components/tasks/DeleteTaskDialog";
-import { useTasks } from "@/hooks/useTasks";
-
-interface Task {
-  id: number;
-  title: string;
-  status: string;
-  progress: number;
-}
-
-const initialTasks = [
-  { id: 1, title: "Update documentation", status: "Completed", progress: 100 },
-  { id: 2, title: "Review pull requests", status: "Todo", progress: 0 },
-  { id: 3, title: "Prepare presentation", status: "In Progress", progress: 30 },
-  { id: 4, title: "Update website content", status: "Completed", progress: 100 },
-];
+import { useTasksStore } from "@/store/tasksStore";  // Updated import
 
 const getStatusIcon = (status: string) => {
   switch (status) {
@@ -34,7 +19,8 @@ const getStatusIcon = (status: string) => {
 };
 
 const Tasks = () => {
-  const { tasks, addTask, deleteTask } = useTasks();
+  // Use Zustand store instead of a custom hook
+  const { tasks, addTask, deleteTask } = useTasksStore();
 
   return (
     <Layout>
