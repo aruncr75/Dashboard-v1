@@ -2,42 +2,47 @@ import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, CheckCircle2, Clock, ListTodo } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTasksStore } from "@/store/tasksStore";
 import {
-  LineChart,
-  Line,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  CartesianGrid,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
-  Area,
-  AreaChart,
 } from "recharts";
 
-const data = [
-  { name: "Mon", tasks: 4 },
-  { name: "Tue", tasks: 3 },
-  { name: "Wed", tasks: 5 },
-  { name: "Thu", tasks: 2 },
-  { name: "Fri", tasks: 6 },
-  { name: "Sat", tasks: 4 },
-  { name: "Sun", tasks: 3 },
-];
-
-const recentTasks = [
-  { id: 1, title: "Update documentation", completed: true },
-  { id: 2, title: "Review pull requests", completed: false },
-  { id: 3, title: "Prepare presentation", completed: false },
-];
-
-const taskStats = [
-  { title: "Total Tasks", count: 12, icon: ListTodo, color: "from-cyan-500 to-blue-500" },
-  { title: "Completed", count: 5, icon: CheckCircle2, color: "from-green-400 to-cyan-500" },
-  { title: "In Progress", count: 4, icon: Clock, color: "from-blue-500 to-cyan-400" },
-  { title: "Pending", count: 3, icon: Clock, color: "from-cyan-400 to-blue-500" },
-];
-
 const Dashboard = () => {
+  const { tasks } = useTasksStore();
+  const totalTasks = tasks.length;
+  const completed = tasks.filter(t => t.status === "Completed").length;
+  const inProgress = tasks.filter(t => t.status === "In Progress").length;
+  const pending = tasks.filter(t => t.status === "Pending").length;
+
+  const taskStats = [
+    { title: "Total Tasks", count: totalTasks, icon: ListTodo, color: "from-cyan-500 to-blue-500" },
+    { title: "Completed", count: completed, icon: CheckCircle2, color: "from-green-400 to-cyan-500" },
+    { title: "In Progress", count: inProgress, icon: Clock, color: "from-blue-500 to-cyan-400" },
+    { title: "Pending", count: pending, icon: Clock, color: "from-cyan-400 to-blue-500" },
+  ];
+
+  // Show the last three tasks as recent tasks, sorted by most recent first
+  const recentTasks = [...tasks]
+    .sort((a, b) => b.id - a.id)
+    .slice(0, 3);
+
+  // Generate weekly data based on current tasks
+  const data = [
+    { name: "Mon", completed, inProgress, pending },
+    { name: "Tue", completed, inProgress, pending },
+    { name: "Wed", completed, inProgress, pending },
+    { name: "Thu", completed, inProgress, pending },
+    { name: "Fri", completed, inProgress, pending },
+    { name: "Sat", completed, inProgress, pending },
+    { name: "Sun", completed, inProgress, pending },
+  ];
+
   return (
     <Layout>
       <div className="space-y-6 animate-fade-in">
@@ -76,11 +81,7 @@ const Dashboard = () => {
                   className="flex items-center justify-between p-3 bg-black/20 rounded-lg animate-fade-in hover:bg-black/30 transition-colors duration-300"
                 >
                   <div className="flex items-center space-x-3">
-                    <CheckCircle2
-                      className={`w-5 h-5 ${
-                        task.completed ? "text-cyan-500" : "text-gray-600"
-                      }`}
-                    />
+                    <CheckCircle2 className={`w-5 h-5 ${task.status === "Completed" ? "text-cyan-500" : "text-gray-600"}`} />
                     <span className="text-gray-300">{task.title}</span>
                   </div>
                 </div>
@@ -101,9 +102,17 @@ const Dashboard = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={data}>
                   <defs>
-                    <linearGradient id="colorTasks" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient id="colorCompleted" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.8}/>
                       <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorInProgress" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorPending" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#38bdf8" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#38bdf8" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#333" />
@@ -118,10 +127,30 @@ const Dashboard = () => {
                   />
                   <Area
                     type="monotone"
-                    dataKey="tasks"
+                    dataKey="completed"
                     stroke="#06b6d4"
                     fillOpacity={1}
-                    fill="url(#colorTasks)"
+                    fill="url(#colorCompleted)"
+                    stackId="1"
+                    name="Completed"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="inProgress"
+                    stroke="#0ea5e9"
+                    fillOpacity={1}
+                    fill="url(#colorInProgress)"
+                    stackId="1"
+                    name="In Progress"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="pending"
+                    stroke="#38bdf8"
+                    fillOpacity={1}
+                    fill="url(#colorPending)"
+                    stackId="1"
+                    name="Pending"
                   />
                 </AreaChart>
               </ResponsiveContainer>

@@ -25,7 +25,7 @@ interface CreateTaskDialogProps {
 export function CreateTaskDialog({ onTaskCreate }: CreateTaskDialogProps) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
-  const [status, setStatus] = useState("todo");
+  const [status, setStatus] = useState("Pending");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,11 +33,11 @@ export function CreateTaskDialog({ onTaskCreate }: CreateTaskDialogProps) {
 
     onTaskCreate({
       title: title.trim(),
-      status: status.charAt(0).toUpperCase() + status.slice(1),
+      status
     });
     
     setTitle("");
-    setStatus("todo");
+    setStatus("Pending");
     setOpen(false);
   };
 
@@ -77,9 +77,9 @@ export function CreateTaskDialog({ onTaskCreate }: CreateTaskDialogProps) {
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="todo">Todo</SelectItem>
-                <SelectItem value="in progress">In Progress</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="Pending">Pending</SelectItem>
+                <SelectItem value="In Progress">In Progress</SelectItem>
+                <SelectItem value="Completed">Completed</SelectItem>
               </SelectContent>
             </Select>
           </div>

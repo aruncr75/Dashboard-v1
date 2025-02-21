@@ -5,7 +5,14 @@ import { ArrowLeft, Plus, CheckCircle2, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { CreateTaskDialog } from "@/components/tasks/CreateTaskDialog";
 import { DeleteTaskDialog } from "@/components/tasks/DeleteTaskDialog";
-import { useTasksStore } from "@/store/tasksStore";  // Updated import
+import { useTasksStore } from "@/store/tasksStore";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 const getStatusIcon = (status: string) => {
   switch (status) {
@@ -19,8 +26,7 @@ const getStatusIcon = (status: string) => {
 };
 
 const Tasks = () => {
-  // Use Zustand store instead of a custom hook
-  const { tasks, addTask, deleteTask } = useTasksStore();
+  const { tasks, addTask, deleteTask, updateTaskStatus } = useTasksStore();
 
   return (
     <Layout>
@@ -46,11 +52,30 @@ const Tasks = () => {
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  {getStatusIcon(task.status)}
-                  <div>
-                    <h3 className="text-base font-medium">{task.title}</h3>
-                    <span className="text-sm text-gray-500">{task.status}</span>
+                <div className="flex flex-col">
+                  <div className="flex items-center space-x-3">
+                    {getStatusIcon(task.status)}
+                    <div>
+                      <h3 className="text-base font-medium">{task.title}</h3>
+                      {/* Optionally, you can show text status here if needed */}
+                      {/* <span className="text-sm text-gray-500">{task.status}</span> */}
+                    </div>
+                  </div>
+                  <div className="mt-2 w-[150px]">
+                    <Select
+                      value={task.status}
+                      onValueChange={(newStatus) => updateTaskStatus(task.id, newStatus)}
+                    >
+                      <SelectTrigger>
+                        {/* Removed placeholder to always show the current status */}
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="In Progress">In Progress</SelectItem>
+                        <SelectItem value="Completed">Completed</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
