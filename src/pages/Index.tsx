@@ -14,7 +14,8 @@ import {
 } from "recharts";
 
 const Dashboard = () => {
-  const { tasks } = useTasksStore();
+  // updated to include quick update function
+  const { tasks, updateTaskStatus } = useTasksStore();
   const totalTasks = tasks.length;
   const completed = tasks.filter(t => t.status === "Completed").length;
   const inProgress = tasks.filter(t => t.status === "In Progress").length;
@@ -76,13 +77,33 @@ const Dashboard = () => {
             <h2 className="text-xl font-semibold mb-4 text-white">Recent Tasks</h2>
             <div className="space-y-4">
               {recentTasks.map((task) => (
-                <div
-                  key={task.id}
-                  className="flex items-center justify-between p-3 bg-black/20 rounded-lg animate-fade-in hover:bg-black/30 transition-colors duration-300"
-                >
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle2 className={`w-5 h-5 ${task.status === "Completed" ? "text-cyan-500" : "text-gray-600"}`} />
-                    <span className="text-gray-300">{task.title}</span>
+                <div key={task.id} className="bg-black/20 rounded-lg p-3 animate-fade-in hover:bg-black/30 transition-colors duration-300">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <CheckCircle2 className={`w-5 h-5 ${task.status === "Completed" ? "text-cyan-500" : "text-gray-600"}`} />
+                      <span className="text-gray-300">{task.title}</span>
+                    </div>
+                  </div>
+                  {/* Quick status change buttons with highlight for current status */}
+                  <div className="mt-2 flex space-x-2">
+                    <button
+                      onClick={() => updateTaskStatus(task.id, "Completed")}
+                      className={`px-2 py-1 text-xs rounded bg-green-600 hover:bg-green-700 text-white ${task.status === "Completed" ? "ring-2 ring-green-300" : ""}`}
+                    >
+                      Completed
+                    </button>
+                    <button
+                      onClick={() => updateTaskStatus(task.id, "In Progress")}
+                      className={`px-2 py-1 text-xs rounded bg-blue-600 hover:bg-blue-700 text-white ${task.status === "In Progress" ? "ring-2 ring-blue-300" : ""}`}
+                    >
+                      In Progress
+                    </button>
+                    <button
+                      onClick={() => updateTaskStatus(task.id, "Pending")}
+                      className={`px-2 py-1 text-xs rounded bg-yellow-600 hover:bg-yellow-700 text-white ${task.status === "Pending" ? "ring-2 ring-yellow-300" : ""}`}
+                    >
+                      Pending
+                    </button>
                   </div>
                 </div>
               ))}
