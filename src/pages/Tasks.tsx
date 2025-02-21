@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus, CheckCircle2, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { CreateTaskDialog } from "@/components/tasks/CreateTaskDialog";
+import { DeleteTaskDialog } from "@/components/tasks/DeleteTaskDialog";
 import { useTasks } from "@/hooks/useTasks";
 
 interface Task {
@@ -33,7 +34,7 @@ const getStatusIcon = (status: string) => {
 };
 
 const Tasks = () => {
-  const { tasks, addTask } = useTasks();
+  const { tasks, addTask, deleteTask } = useTasks();
 
   return (
     <Layout>
@@ -66,13 +67,16 @@ const Tasks = () => {
                     <span className="text-sm text-gray-500">{task.status}</span>
                   </div>
                 </div>
-                <div className="w-24">
-                  <div className="h-1.5 bg-gray-200 rounded-full">
-                    <div
-                      className="h-full bg-primary rounded-full transition-all duration-500"
-                      style={{ width: `${task.progress}%` }}
-                    />
+                <div className="flex items-center space-x-2">
+                  <div className="w-24">
+                    <div className="h-1.5 bg-gray-200 rounded-full">
+                      <div
+                        className="h-full bg-primary rounded-full transition-all duration-500"
+                        style={{ width: `${task.progress}%` }}
+                      />
+                    </div>
                   </div>
+                  <DeleteTaskDialog onDelete={() => deleteTask(task.id)} />
                 </div>
               </div>
             </Card>
