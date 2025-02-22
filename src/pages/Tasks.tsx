@@ -1,7 +1,7 @@
 import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Plus, CheckCircle2, Clock } from "lucide-react";
+import { ArrowLeft, Plus, CheckCircle2, Clock, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { CreateTaskDialog } from "@/components/tasks/CreateTaskDialog";
 import { DeleteTaskDialog } from "@/components/tasks/DeleteTaskDialog";
@@ -13,6 +13,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import ProgressBar from "@/components/ui/ProgressBar";
 
 const getStatusIcon = (status: string) => {
   switch (status) {
@@ -29,14 +30,16 @@ const statuses = ["Completed", "In Progress", "Pending"];
 
 const orderMap = {
   "In Progress": 0,
-  "Pending": 1,
-  "Completed": 2,
+  Pending: 1,
+  Completed: 2,
 };
 
 const Tasks = () => {
   const { tasks, addTask, deleteTask, updateTaskStatus } = useTasksStore();
   // Sort tasks with "In Progress" on top, then "Pending", then "Completed"
-  const sortedTasks = [...tasks].sort((a, b) => orderMap[a.status] - orderMap[b.status]);
+  const sortedTasks = [...tasks].sort(
+    (a, b) => orderMap[a.status] - orderMap[b.status]
+  );
 
   return (
     <Layout>
@@ -73,7 +76,9 @@ const Tasks = () => {
                   <div className="mt-2 w-[150px]">
                     <Select
                       value={task.status}
-                      onValueChange={(newStatus) => updateTaskStatus(task.id, newStatus)}
+                      onValueChange={(newStatus) =>
+                        updateTaskStatus(task.id, newStatus)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -88,12 +93,13 @@ const Tasks = () => {
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-24">
-                    <div className="h-1.5 bg-gray-200 rounded-full">
-                      <div
-                        className="h-full bg-primary rounded-full transition-all duration-500"
-                        style={{ width: `${task.progress}%` }}
-                      />
-                    </div>
+                    {/* ProgressBar color now reflects task icon colors */}
+                    <ProgressBar
+                      progress={task.progress}
+                      status={
+                        task.status as "Completed" | "In Progress" | "Pending"
+                      }
+                    />
                   </div>
                   <DeleteTaskDialog onDelete={() => deleteTask(task.id)} />
                 </div>
@@ -122,6 +128,14 @@ const Tasks = () => {
                       </span>
                     </Button>
                   ))}
+                {/* Quick delete button modified to use text instead of icon */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => deleteTask(task.id)}
+                >
+                  <span className="text-red-500">Delete</span>
+                </Button>
               </div>
             </Card>
           ))}
