@@ -200,15 +200,6 @@ const Routines = () => {
   return (
     <Layout>
       <div className="min-h-screen w-full max-w-full overflow-x-hidden">
-        {/* Top header with back button */}
-        <div className="flex items-center space-x-4 p-4">
-          <Link to="/">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-          </Link>
-          <h1 className="text-3xl font-bold">Routines</h1>
-        </div>
         {/* Tab Navigation */}
         <div className="flex justify-center space-x-4 border-b border-gray-700">
           <button
