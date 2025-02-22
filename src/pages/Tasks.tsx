@@ -27,8 +27,16 @@ const getStatusIcon = (status: string) => {
 
 const statuses = ["Completed", "In Progress", "Pending"];
 
+const orderMap = {
+  "In Progress": 0,
+  "Pending": 1,
+  "Completed": 2,
+};
+
 const Tasks = () => {
   const { tasks, addTask, deleteTask, updateTaskStatus } = useTasksStore();
+  // Sort tasks with "In Progress" on top, then "Pending", then "Completed"
+  const sortedTasks = [...tasks].sort((a, b) => orderMap[a.status] - orderMap[b.status]);
 
   return (
     <Layout>
@@ -47,7 +55,7 @@ const Tasks = () => {
         </div>
 
         <div className="grid gap-4">
-          {tasks.map((task, index) => (
+          {sortedTasks.map((task, index) => (
             <Card
               key={task.id}
               className="p-4 bg-gradient-to-br from-background to-card border-none shadow-lg fire-glow-hover transition-all duration-300 animate-fade-in"
