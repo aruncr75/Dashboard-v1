@@ -12,9 +12,9 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Dashboard = () => {
-  // updated to include quick update function
   const { tasks, updateTaskStatus } = useTasksStore();
   const totalTasks = tasks.length;
   const completed = tasks.filter(t => t.status === "Completed").length;
@@ -28,10 +28,8 @@ const Dashboard = () => {
     { title: "Pending", count: pending, icon: Clock, color: "from-cyan-400 to-blue-500" },
   ];
 
-  // Show the last three tasks as recent tasks, sorted by most recent first
-  const recentTasks = [...tasks]
-    .sort((a, b) => b.id - a.id)
-    .slice(0, 3);
+  // Replace recentTasks with sortedTasks that contains all tasks
+  const sortedTasks = [...tasks].sort((a, b) => b.id - a.id);
 
   // Generate weekly data based on current tasks
   const data = [
@@ -75,8 +73,8 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="p-6 animate-fade-in [animation-delay:200ms] bg-gradient-to-br from-background to-card border-none shadow-lg">
             <h2 className="text-xl font-semibold mb-4 text-white">Recent Tasks</h2>
-            <div className="space-y-4">
-              {recentTasks.map((task) => (
+            <ScrollArea className="h-[300px] space-y-4">
+              {sortedTasks.map((task) => (
                 <div key={task.id} className="bg-black/20 rounded-lg p-3 animate-fade-in hover:bg-black/30 transition-colors duration-300">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -113,7 +111,7 @@ const Dashboard = () => {
                   </div>
                 </div>
               ))}
-            </div>
+            </ScrollArea>
             <Link
               to="/tasks"
               className="flex items-center space-x-2 mt-4 text-cyan-400 hover:text-cyan-300"

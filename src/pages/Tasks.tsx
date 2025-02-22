@@ -25,6 +25,8 @@ const getStatusIcon = (status: string) => {
   }
 };
 
+const statuses = ["Completed", "In Progress", "Pending"];
+
 const Tasks = () => {
   const { tasks, addTask, deleteTask, updateTaskStatus } = useTasksStore();
 
@@ -57,17 +59,15 @@ const Tasks = () => {
                     {getStatusIcon(task.status)}
                     <div>
                       <h3 className="text-base font-medium">{task.title}</h3>
-                      {/* Optionally, you can show text status here if needed */}
-                      {/* <span className="text-sm text-gray-500">{task.status}</span> */}
                     </div>
                   </div>
+                  {/* Re-introduced dropdown for task status */}
                   <div className="mt-2 w-[150px]">
                     <Select
                       value={task.status}
                       onValueChange={(newStatus) => updateTaskStatus(task.id, newStatus)}
                     >
                       <SelectTrigger>
-                        {/* Removed placeholder to always show the current status */}
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -89,6 +89,31 @@ const Tasks = () => {
                   </div>
                   <DeleteTaskDialog onDelete={() => deleteTask(task.id)} />
                 </div>
+              </div>
+              {/* Render quick buttons for statuses other than current task status */}
+              <div className="flex space-x-2 mt-2">
+                {statuses
+                  .filter((s) => s !== task.status)
+                  .map((s) => (
+                    <Button
+                      key={s}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => updateTaskStatus(task.id, s)}
+                    >
+                      <span
+                        className={
+                          s === "Completed"
+                            ? "text-green-500"
+                            : s === "In Progress"
+                            ? "text-yellow-500"
+                            : "text-blue-500"
+                        }
+                      >
+                        {s}
+                      </span>
+                    </Button>
+                  ))}
               </div>
             </Card>
           ))}
