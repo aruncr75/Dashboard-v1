@@ -14,6 +14,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import ProgressBar from "@/components/ui/ProgressBar";
+import EditTaskDialog from "@/components/tasks/EditTaskDialog"; // added import
 
 const getStatusIcon = (status: string) => {
   switch (status) {
@@ -35,7 +36,7 @@ const orderMap = {
 };
 
 const Tasks = () => {
-  const { tasks, addTask, deleteTask, updateTaskStatus } = useTasksStore();
+  const { tasks, addTask, deleteTask, updateTaskStatus, editTask } = useTasksStore();
   // Sort tasks with "In Progress" on top, then "Pending", then "Completed"
   const sortedTasks = [...tasks].sort(
     (a, b) => orderMap[a.status] - orderMap[b.status]
@@ -136,6 +137,12 @@ const Tasks = () => {
                 >
                   <span className="text-red-500">Delete</span>
                 </Button>
+                {/* Quick edit button using EditTaskDialog with status */}
+                <EditTaskDialog
+                  taskTitle={task.title}
+                  taskStatus={task.status}
+                  onEdit={(newTitle, newStatus) => editTask(task.id, newTitle, newStatus)}
+                />
               </div>
             </Card>
           ))}

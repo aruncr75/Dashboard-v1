@@ -13,6 +13,7 @@ interface TasksState {
   addTask: (task: { title: string; status: string }) => void;
   deleteTask: (id: number) => void;
   updateTaskStatus: (id: number, newStatus: string) => void;
+  editTask: (id: number, newTitle: string, newStatus: string) => void; // updated editTask signature
 }
 
 // Updated initial tasks: changing "Review pull requests" and "Prepare presentation" to "Pending"
@@ -42,7 +43,13 @@ export const useTasksStore = create<TasksState>()(
             task.id === id ? { ...task, status: newStatus, progress: newProgress } : task
           )
         });
-      }
+      },
+      editTask: (id, newTitle, newStatus) =>
+        set({
+          tasks: get().tasks.map(task =>
+            task.id === id ? { ...task, title: newTitle, status: newStatus } : task
+          )
+        })
     }),
     { name: 'dashboard-tasks' }
   )
