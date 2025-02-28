@@ -36,7 +36,8 @@ const orderMap = {
 };
 
 const Tasks = () => {
-  const { tasks, addTask, deleteTask, updateTaskStatus, editTask } = useTasksStore();
+  const { tasks, addTask, deleteTask, updateTaskStatus, editTask } =
+    useTasksStore();
   // Sort tasks with "In Progress" on top, then "Pending", then "Completed"
   const sortedTasks = [...tasks].sort(
     (a, b) => orderMap[a.status] - orderMap[b.status]
@@ -62,7 +63,7 @@ const Tasks = () => {
           {sortedTasks.map((task, index) => (
             <Card
               key={task.id}
-              className="p-4 bg-gradient-to-br from-background to-card border-none shadow-lg fire-glow-hover transition-all duration-300 animate-fade-in"
+              className="p-4 bg-gradient-to-br from-background to-card border-none shadow-lg fire-glow-hover"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="flex items-center justify-between">
@@ -141,7 +142,9 @@ const Tasks = () => {
                 <EditTaskDialog
                   taskTitle={task.title}
                   taskStatus={task.status}
-                  onEdit={(newTitle, newStatus) => editTask(task.id, newTitle, newStatus)}
+                  onEdit={(newTitle, newStatus) =>
+                    editTask(task.id, newTitle, newStatus)
+                  }
                 />
               </div>
             </Card>

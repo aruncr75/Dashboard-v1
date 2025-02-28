@@ -24,7 +24,11 @@ interface EditTaskDialogProps {
   onEdit: (newTitle: string, newStatus: string) => void;
 }
 
-export const EditTaskDialog: React.FC<EditTaskDialogProps> = ({ taskTitle, taskStatus, onEdit }) => {
+export const EditTaskDialog: React.FC<EditTaskDialogProps> = ({
+  taskTitle,
+  taskStatus,
+  onEdit,
+}) => {
   const [open, setOpen] = useState(false);
   const [newTitle, setNewTitle] = useState(taskTitle);
   const [newStatus, setNewStatus] = useState(taskStatus);
@@ -33,7 +37,7 @@ export const EditTaskDialog: React.FC<EditTaskDialogProps> = ({ taskTitle, taskS
     setNewTitle(taskTitle);
     setNewStatus(taskStatus);
   }, [taskTitle, taskStatus]);
-  
+
   const handleSubmit = () => {
     if ((newTitle && newTitle !== taskTitle) || newStatus !== taskStatus) {
       onEdit(newTitle, newStatus);
@@ -51,7 +55,9 @@ export const EditTaskDialog: React.FC<EditTaskDialogProps> = ({ taskTitle, taskS
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit Task</DialogTitle>
-          <DialogDescription>Update the task title and status below.</DialogDescription>
+          <DialogDescription>
+            Update the task title and status below.
+          </DialogDescription>
         </DialogHeader>
         <Input
           value={newTitle}
@@ -62,7 +68,8 @@ export const EditTaskDialog: React.FC<EditTaskDialogProps> = ({ taskTitle, taskS
         <div className="mt-2">
           <Select value={newStatus} onValueChange={setNewStatus}>
             <SelectTrigger>
-              <SelectValue>{newStatus}</SelectValue> {/* Now displays current status as default */}
+              <SelectValue>{newStatus}</SelectValue>{" "}
+              {/* Now displays current status as default */}
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="Pending">Pending</SelectItem>
