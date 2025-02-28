@@ -1,29 +1,43 @@
 import React from "react";
 
 type ProgressBarProps = {
-  progress: number; // percentage (0-100)
+  progress: number;
   status: "Pending" | "In Progress" | "Completed";
+  showGlowEffect?: boolean;
 };
 
-const statusColors: Record<ProgressBarProps["status"], string> = {
-  Pending: "bg-blue-500",
-  "In Progress": "bg-yellow-500",
-  Completed: "bg-green-500",
+const statusStyles = {
+  Pending: {
+    bg: "bg-gradient-to-r from-blue-500 to-cyan-400",
+    glow: "shadow-blue-500/50"
+  },
+  "In Progress": {
+    bg: "bg-gradient-to-r from-yellow-500 to-orange-400",
+    glow: "shadow-yellow-500/50"
+  },
+  Completed: {
+    bg: "bg-gradient-to-r from-green-500 to-emerald-400",
+    glow: "shadow-green-500/50"
+  }
 };
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({
   progress,
   status,
+  showGlowEffect = true
 }) => {
-  const colorClass = statusColors[status] || "bg-gray-500";
+  const style = statusStyles[status];
 
   return (
-    <div className="w-full rounded-full h-4 overflow-hidden bg-white/5 border border-white/20 backdrop-blur-lg shadow-md">
+    <div className="relative w-full h-4 bg-gray-900/50 rounded-full overflow-hidden backdrop-blur-sm border border-white/10">
       <div
-        className={`${colorClass} relative h-full shadow-inner transition-all duration-500`}
+        className={`h-full transition-all duration-500 ease-out ${style.bg} ${
+          showGlowEffect ? `shadow-lg ${style.glow}` : ""
+        }`}
         style={{ width: `${progress}%` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-white/50 via-white/10 to-transparent opacity-30 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5" />
       </div>
     </div>
   );

@@ -1,5 +1,16 @@
 .glass-card {
-  @apply bg-white bg-opacity-20 backdrop-blur-lg rounded-xl border border-white border-opacity-20 shadow-lg;
+  @apply bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 shadow-xl;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+}
+
+.glass-card:hover {
+  @apply border-white/20;
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
 }
 
 .page-transition {
@@ -29,16 +40,23 @@
 
 /* Animated gradient text */
 .animated-gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r;
-  background-size: 200% 200%;
-  animation: gradient 8s ease infinite, wave 3s ease-in-out infinite;
-  background-image: linear-gradient(45deg, 
-    #06b6d4 0%, 
-    #3b82f6 25%, 
-    #06b6d4 50%, 
-    #3b82f6 75%, 
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(
+    120deg,
+    #06b6d4 0%,
+    #3b82f6 25%,
+    #8b5cf6 50%,
+    #3b82f6 75%,
     #06b6d4 100%
   );
+  background-size: 200% auto;
+  animation: shine 8s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
 }
 
 @keyframes gradient {
@@ -63,4 +81,32 @@
   75% {
     transform: skewX(12deg);
   }
+}
+
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 15px theme('colors.cyan.500');
+}
+
+/* Improved sidebar animations */
+.sidebar-item {
+  @apply transition-all duration-300;
+  transform-origin: left;
+}
+
+.sidebar-item:hover {
+  @apply scale-105;
+}
+
+/* Card hover effects */
+.card-hover-effect {
+  @apply transition-all duration-300;
+}
+
+.card-hover-effect:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import ProgressBar from "@/components/ui/ProgressBar";
 import EditTaskDialog from "@/components/tasks/EditTaskDialog"; // added import
+import { SubTaskList } from "@/components/tasks/SubTaskList";
 
 const getStatusIcon = (status: string) => {
   switch (status) {
@@ -36,7 +37,7 @@ const orderMap = {
 };
 
 const Tasks = () => {
-  const { tasks, addTask, deleteTask, updateTaskStatus, editTask } =
+  const { tasks, addTask, deleteTask, updateTaskStatus, editTask, addSubTask, toggleSubTask, deleteSubTask } =
     useTasksStore();
   // Sort tasks with "In Progress" on top, then "Pending", then "Completed"
   const sortedTasks = [...tasks].sort(
@@ -106,6 +107,14 @@ const Tasks = () => {
                   <DeleteTaskDialog onDelete={() => deleteTask(task.id)} />
                 </div>
               </div>
+              {/* Add SubTaskList component */}
+              <SubTaskList
+                taskId={task.id}
+                subtasks={task.subtasks}
+                onAdd={addSubTask}
+                onToggle={toggleSubTask}
+                onDelete={deleteSubTask}
+              />
               {/* Render quick buttons for statuses other than current task status */}
               <div className="flex space-x-2 mt-2">
                 {statuses
