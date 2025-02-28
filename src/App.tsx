@@ -8,6 +8,7 @@ import Tasks from "./pages/Tasks";
 import Analytics from "./pages/Analytics";
 import Routines from "./pages/Routines"; // Updated import
 import NotFound from "./pages/NotFound";
+import Test from "./pages/Test";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/routine" element={<Routines />} /> {/* Ensure this points to the new Routines component */}
+          <Route path="/test" element={<Test />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
