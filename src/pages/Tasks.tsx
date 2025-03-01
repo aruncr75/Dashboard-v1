@@ -37,7 +37,7 @@ const orderMap = {
 };
 
 const Tasks = () => {
-  const { tasks, addTask, deleteTask, updateTaskStatus, editTask, addSubTask, toggleSubTask, deleteSubTask, addMorningRoutine } =
+  const { tasks, addTask, deleteTask, updateTaskStatus, editTask, addSubTask, toggleSubTask, deleteSubTask, addMorningRoutine, addEveningRoutine } =
     useTasksStore();
   // Sort tasks with "In Progress" on top, then "Pending", then "Completed"
   const sortedTasks = [...tasks].sort(
@@ -60,6 +60,9 @@ const Tasks = () => {
           <CreateTaskDialog onTaskCreate={addTask} />
           <Button variant="outline" onClick={addMorningRoutine}>
             Add Morning Routine
+          </Button>
+          <Button variant="outline" onClick={addEveningRoutine}>
+            Add Evening Routine
           </Button>
         </div>
 

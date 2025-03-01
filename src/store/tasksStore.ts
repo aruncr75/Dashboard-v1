@@ -25,6 +25,7 @@ interface TasksState {
   toggleSubTask: (taskId: number, subtaskId: number) => void;
   deleteSubTask: (taskId: number, subtaskId: number) => void;
   addMorningRoutine: () => void;
+  addEveningRoutine: () => void;
 }
 
 export const useTasksStore = create<TasksState>()(
@@ -199,6 +200,61 @@ export const useTasksStore = create<TasksState>()(
           const newTask = {
             id: newId,
             title: "Morning Routine",
+            status: "Pending",
+            progress: 0,
+            subtasks,
+          };
+          return { tasks: [...tasks, newTask] };
+        }),
+      addEveningRoutine: () =>
+        set((state) => {
+          const tasks = state.tasks;
+          const newId = tasks.length ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+          const subtasks = [
+            {
+              id: 1,
+              title: "🛏️ Set a Consistent Bedtime - Task 1.1: Decide on a Bedtime: Aim to be in bed by 10:30 PM every night.",
+              completed: false,
+            },
+            {
+              id: 2,
+              title: "🌙 Begin Wind-Down Routine - Task 1.2: Start your wind-down activities around 9:30 PM.",
+              completed: false,
+            },
+            {
+              id: 3,
+              title: "📝 Plan for Tomorrow - Task 2.1: Identify 'Rule of 5' Tasks: Write down the five most important tasks for the next day.",
+              completed: false,
+            },
+            {
+              id: 4,
+              title: "🎒 Prepare Morning Items - Task 2.2: Lay out your workout clothes and set out Miracle Morning materials (journal, books).",
+              completed: false,
+            },
+            {
+              id: 5,
+              title: "📵 Avoid Screens Before Bed - Task 3.1: Turn off electronic devices 30–60 minutes before bedtime.",
+              completed: false,
+            },
+            {
+              id: 6,
+              title: "🧘‍♀️ Relaxation Activities - Task 3.2: Engage in deep breathing, gentle stretching, or meditation for 5–10 minutes.",
+              completed: false,
+            },
+            {
+              id: 7,
+              title: "🖋️ Evening Journaling - Task 4.1: Write down lingering thoughts to clear your mind and note something positive about your day.",
+              completed: false,
+            },
+            {
+              id: 8,
+              title: "💬 Affirmations - Task 4.2: Repeat positive statements about your ability to improve and succeed.",
+              completed: false,
+            },
+          ];
+          const newTask = {
+            id: newId,
+            title: "Evening Routine",
             status: "Pending",
             progress: 0,
             subtasks,
