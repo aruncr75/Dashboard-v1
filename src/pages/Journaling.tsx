@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card"; // Added missing import
 import { Input } from "@/components/ui/input";
@@ -91,17 +91,6 @@ const Journaling = () => {
       .replace(/^>(.*)$/gm, '<blockquote>$1</blockquote>');
   };
 
-  const contentEditableRef = useRef<HTMLDivElement>(null);
-
-  const handleTextChange = (e: React.FormEvent<HTMLDivElement>) => {
-    if (draft) {
-      setDraft({
-        ...draft,
-        body: e.currentTarget.innerText
-      });
-    }
-  };
-
   const applyCorrection = async (prompt: string, correctionId: string) => {
     if (!draft?.body) return;
 
@@ -162,7 +151,8 @@ const Journaling = () => {
                   placeholder="Title"
                   value={draft.title}
                   onChange={(e) => setDraft({ ...draft, title: e.target.value })}
-                  className="text-xl font-semibold"
+                  className="text-xl font-semibold bg-gray-950 border-2 border-gray-600 
+                    focus:border-primary focus:ring-2 focus:ring-primary/50 placeholder:text-gray-500"
                 />
                 
                 <div className="flex flex-wrap gap-2">
@@ -189,13 +179,17 @@ const Journaling = () => {
                   <p className="text-destructive text-sm">{error}</p>
                 )}
 
-                <div
-                  ref={contentEditableRef}
-                  contentEditable
-                  onInput={handleTextChange}
-                  dangerouslySetInnerHTML={{ __html: draft.body }}
-                  className="flex-1 p-2 border rounded bg-gray-900 text-white min-h-[200px] overflow-auto"
-                  style={{ whiteSpace: 'pre-wrap' }}
+                <textarea
+                  placeholder="Write your thoughts..."
+                  value={draft?.body}
+                  onChange={(e) => setDraft({ ...draft!, body: e.target.value })}
+                  className="flex-1 p-3 rounded bg-gray-950 text-white resize-none min-h-[200px] overflow-auto
+                    border-2 border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary
+                    transition-all duration-200 placeholder:text-gray-500"
+                  style={{ 
+                    whiteSpace: 'pre-wrap',
+                    lineHeight: '1.5',
+                  }}
                 />
               </div>
             )}
