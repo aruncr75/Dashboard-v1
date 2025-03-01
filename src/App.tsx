@@ -11,6 +11,7 @@ const Tasks = lazy(() => import("./pages/Tasks"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const Routines = lazy(() => import("./pages/Routines"));
 const Journaling = lazy(() => import("./pages/Journaling"));
+const GeminiAI = lazy(() => import("./pages/GeminiAI"));
 const Test = lazy(() => import("./pages/Test"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -31,6 +32,7 @@ const App = () => (
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/routine" element={<Routines />} />
               <Route path="/journaling" element={<Journaling />} />
+              <Route path="/gemini-ai" element={<GeminiAI />} />
               <Route path="/test" element={<Test />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

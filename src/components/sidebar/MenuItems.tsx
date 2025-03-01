@@ -1,4 +1,4 @@
-import { Home, BarChart, CheckSquare, Repeat, TestTube, BookOpen } from "lucide-react";
+import { Home, BarChart, CheckSquare, Repeat, TestTube, BookOpen, Bot } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   SidebarMenu,
@@ -11,7 +11,8 @@ export const menuItems = [
   { title: "Tasks", icon: CheckSquare, path: "/tasks" },
   { title: "Analytics", icon: BarChart, path: "/analytics" },
   { title: "Routine", icon: Repeat, path: "/routine" },
-  { title: "Journaling", icon: BookOpen, path: "/journaling" }, // new menu item
+  { title: "Journaling", icon: BookOpen, path: "/journaling" },
+  { title: "Gemini AI", icon: Bot, path: "/gemini-ai" }, // Updated path and title
   { title: "Test", icon: TestTube, path: "/test" },
 ];
 
