@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card"; // Added missing import
 import { Input } from "@/components/ui/input";
@@ -73,7 +73,7 @@ const Journaling = () => {
     { 
       id: 'enhance',
       label: "Enhance Writing", 
-      prompt: "Improve this text to be more engaging and clear, while maintaining the original meaning" 
+      prompt: "Improve this text to be more engaging and descriptive. Show, don't tell. Add emotional depth and better sentence structure. Keep the core meaning but make it more impactful. Format the response with markdown for emphasis where appropriate." 
     },
     { 
       id: 'formal',
@@ -82,12 +82,35 @@ const Journaling = () => {
     }
   ];
 
+  const formatMarkdown = (text: string) => {
+    // Basic markdown formatting for the enhanced text
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n\n/g, '<br/><br/>')
+      .replace(/^>(.*)$/gm, '<blockquote>$1</blockquote>');
+  };
+
+  const contentEditableRef = useRef<HTMLDivElement>(null);
+
+  const handleTextChange = (e: React.FormEvent<HTMLDivElement>) => {
+    if (draft) {
+      setDraft({
+        ...draft,
+        body: e.currentTarget.innerText
+      });
+    }
+  };
+
   const applyCorrection = async (prompt: string, correctionId: string) => {
     if (!draft?.body) return;
 
     const correctedText = await correctText(draft.body, prompt, correctionId);
     if (correctedText) {
-      setDraft(prev => ({ ...prev!, body: correctedText }));
+      setDraft(prev => ({ 
+        ...prev!, 
+        body: correctedText
+      }));
     }
   };
 
@@ -166,11 +189,13 @@ const Journaling = () => {
                   <p className="text-destructive text-sm">{error}</p>
                 )}
 
-                <textarea
-                  placeholder="Write your thoughts..."
-                  value={draft.body}
-                  onChange={(e) => setDraft({ ...draft, body: e.target.value })}
-                  className="flex-1 p-2 border rounded bg-gray-900 text-white resize-none min-h-0"
+                <div
+                  ref={contentEditableRef}
+                  contentEditable
+                  onInput={handleTextChange}
+                  dangerouslySetInnerHTML={{ __html: draft.body }}
+                  className="flex-1 p-2 border rounded bg-gray-900 text-white min-h-[200px] overflow-auto"
+                  style={{ whiteSpace: 'pre-wrap' }}
                 />
               </div>
             )}

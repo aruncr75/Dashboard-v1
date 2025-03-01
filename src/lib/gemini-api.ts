@@ -16,7 +16,7 @@ export async function sendMessageToGemini(message: string) {
           temperature: 0.7,
           topK: 40,
           topP: 0.95,
-          maxOutputTokens: 1024,
+          maxOutputTokens: 1024, // Reduced tokens since we don't need options anymore
         },
         safetySettings: [
           {
