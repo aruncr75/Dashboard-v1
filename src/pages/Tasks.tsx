@@ -37,7 +37,7 @@ const orderMap = {
 };
 
 const Tasks = () => {
-  const { tasks, addTask, deleteTask, updateTaskStatus, editTask, addSubTask, toggleSubTask, deleteSubTask } =
+  const { tasks, addTask, deleteTask, updateTaskStatus, editTask, addSubTask, toggleSubTask, deleteSubTask, addMorningRoutine } =
     useTasksStore();
   // Sort tasks with "In Progress" on top, then "Pending", then "Completed"
   const sortedTasks = [...tasks].sort(
@@ -56,8 +56,11 @@ const Tasks = () => {
           <h1 className="text-3xl font-bold">Tasks</h1>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end space-x-2">
           <CreateTaskDialog onTaskCreate={addTask} />
+          <Button variant="outline" onClick={addMorningRoutine}>
+            Add Morning Routine
+          </Button>
         </div>
 
         <div className="grid gap-4">

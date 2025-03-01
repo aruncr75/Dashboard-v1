@@ -24,6 +24,7 @@ interface TasksState {
   addSubTask: (taskId: number, subtaskTitle: string) => void;
   toggleSubTask: (taskId: number, subtaskId: number) => void;
   deleteSubTask: (taskId: number, subtaskId: number) => void;
+  addMorningRoutine: () => void;
 }
 
 export const useTasksStore = create<TasksState>()(
@@ -139,6 +140,71 @@ export const useTasksStore = create<TasksState>()(
           })
         });
       },
+      addMorningRoutine: () =>
+        set((state) => {
+          const tasks = state.tasks;
+          const newId = tasks.length ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+          const subtasks = [
+            {
+              id: 1,
+              title: "⏰ Wake Up Early - Task 5.1: Set your alarm for 6:00 AM. Place it away from your bed to encourage getting up.",
+              completed: false,
+            },
+            {
+              id: 2,
+              title: "💧 Hydrate - Task 6.1: Immediately after waking, drink a full glass of water.",
+              completed: false,
+            },
+            {
+              id: 3,
+              title: "🧘‍♂️ Meditation - Task 7.1: Find a quiet space, sit comfortably, and focus on your breathing or use a meditation app.",
+              completed: false,
+            },
+            {
+              id: 4,
+              title: "🔊 Affirmations - Task 8.1: Repeat positive statements to boost your focus, productivity, and self-belief.",
+              completed: false,
+            },
+            {
+              id: 5,
+              title: "👁️‍🗨️ Visualization - Task 9.1: Visualize success by imagining yourself efficiently completing your 'Rule of 5' tasks.",
+              completed: false,
+            },
+            {
+              id: 6,
+              title: "💪 Exercise - Task 10.1: Perform a quick workout (e.g., yoga, stretching, bodyweight exercises, or a short jog).",
+              completed: false,
+            },
+            {
+              id: 7,
+              title: "📚 Reading - Task 11.1: Read for personal growth; focus on professional development or inspirational content.",
+              completed: false,
+            },
+            {
+              id: 8,
+              title: "🖊️ Journaling - Task 12.1: Write reflections, note insights from reading, and jot down work ideas.",
+              completed: false,
+            },
+            {
+              id: 9,
+              title: "📋 Planning - Task 13.1: Review and prioritize your 'Rule of 5' tasks and schedule them into your day.",
+              completed: false,
+            },
+            {
+              id: 10,
+              title: "🍽️ Healthy Breakfast - Task 14.1: Prepare a nutritious meal with proteins, whole grains, and fruits or vegetables.",
+              completed: false,
+            },
+          ];
+          const newTask = {
+            id: newId,
+            title: "Morning Routine",
+            status: "Pending",
+            progress: 0,
+            subtasks,
+          };
+          return { tasks: [...tasks, newTask] };
+        }),
     }),
     { name: 'dashboard-tasks' }
   )

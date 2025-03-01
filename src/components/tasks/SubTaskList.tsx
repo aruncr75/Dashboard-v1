@@ -31,7 +31,7 @@ export const SubTaskList: React.FC<SubTaskListProps> = ({
   };
 
   return (
-    <div className="mt-4 space-y-2">
+    <div className="mt-4 space-y-4">
       <form onSubmit={handleAddSubtask} className="flex gap-2">
         <Input
           value={newSubtask}
@@ -44,14 +44,14 @@ export const SubTaskList: React.FC<SubTaskListProps> = ({
         </Button>
       </form>
       
-      <div className="space-y-2">
+      <div className="space-y-3">
         {subtasks.map((subtask) => (
-          <div key={subtask.id} className="flex items-center gap-2 p-2 rounded bg-black/20">
+          <div key={subtask.id} className="flex items-center gap-3 p-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors">
             <Checkbox
               checked={subtask.completed}
               onCheckedChange={() => onToggle(taskId, subtask.id)}
             />
-            <span className={`flex-1 ${subtask.completed ? 'line-through text-gray-500' : ''}`}>
+            <span className={`flex-1 text-sm ${subtask.completed ? 'line-through text-gray-400' : 'text-white'}`}>
               {subtask.title}
             </span>
             <Button
