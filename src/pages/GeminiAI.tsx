@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect, useRef } from "react";
 import { sendMessageToGemini } from "@/lib/gemini-api";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ChatMessage {
   id: string;
@@ -133,38 +134,40 @@ const GeminiAI = () => {
         </div>
 
         <Card className="p-4 h-[calc(100vh-200px)] flex flex-col bg-gradient-to-br from-background to-card border-none shadow-lg">
-          <div 
-            className="flex-1 overflow-y-auto space-y-4 p-4"
+          <ScrollArea 
+            className="flex-1 p-4"
             role="log"
             aria-live="polite"
             aria-label="Chat messages"
           >
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}
-                role="article"
-                aria-label={`${msg.isUser ? 'Your message' : 'AI response'}`}
-              >
+            <div className="space-y-4">
+              {messages.map((msg) => (
                 <div
-                  className={`max-w-[80%] p-3 rounded-lg ${
-                    msg.isUser
-                      ? 'bg-primary text-primary-foreground ml-auto'
-                      : 'bg-muted'
-                  }`}
+                  key={msg.id}
+                  className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}
+                  role="article"
+                  aria-label={`${msg.isUser ? 'Your message' : 'AI response'}`}
                 >
-                  <div className="break-words">{msg.text}</div>
-                  <time 
-                    className="text-xs opacity-50 mt-1 block"
-                    dateTime={msg.timestamp}
+                  <div
+                    className={`max-w-[80%] p-3 rounded-lg ${
+                      msg.isUser
+                        ? 'bg-primary text-primary-foreground ml-auto'
+                        : 'bg-muted'
+                    }`}
                   >
-                    {new Date(msg.timestamp).toLocaleTimeString()}
-                  </time>
+                    <div className="break-words">{msg.text}</div>
+                    <time 
+                      className="text-xs opacity-50 mt-1 block"
+                      dateTime={msg.timestamp}
+                    >
+                      {new Date(msg.timestamp).toLocaleTimeString()}
+                    </time>
+                  </div>
                 </div>
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
+          </ScrollArea>
 
           <form 
             onSubmit={handleSubmit} 

@@ -14,7 +14,7 @@ export const Layout = ({ children }: LayoutProps) => {
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f]">
         {!isMobile && <AppSidebar />}
-        <main className="flex-1 p-4 sm:p-6 overflow-auto">
+        <main className="flex-1 pb-16 md:pb-0">
           <div className="max-w-7xl mx-auto animate-[scale-in_0.2s_ease-out]">
             {children}
           </div>

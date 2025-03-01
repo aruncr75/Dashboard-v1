@@ -8,6 +8,7 @@ import { Wand2, X, Search } from "lucide-react"; // Add this import
 import { useGeminiCorrections } from "@/hooks/useGeminiCorrections";
 import { Loader2 } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { ScrollArea } from "@/components/ui/scroll-area"; // Add this import
 
 const Journaling = () => {
   const {
@@ -92,25 +93,32 @@ const Journaling = () => {
 
   return (
     <Layout>
-      <div className="p-4 space-y-6">
-        <Card className="p-6">
-          <h1 className="text-3xl font-bold mb-4">Journaling</h1>
-          <div className="flex items-center space-x-2 mb-4">
-            <Button onClick={createNewEntry}>New Entry</Button>
-            {draft && (
-              <>
-                <Button onClick={handleSave} variant="default">Save Entry</Button>
-                <Button 
-                  onClick={() => draft?.body.trim() || draft?.title.trim() ? setCloseDialogOpen(true) : setDraft(null)}
-                  variant="ghost"
-                  className="text-muted-foreground hover:text-destructive"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
-              </>
-            )}
-            {entries.length > 0 && (
-              <div className="flex-1 relative">
+      <div className="h-[calc(100vh-4rem)] p-2 md:p-4 pb-20 md:pb-4">
+        <Card className="h-full flex flex-col p-4 md:p-6">
+          {/* Header Section */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+            <h1 className="text-2xl md:text-3xl font-bold">Journaling</h1>
+            <div className="flex items-center gap-2">
+              <Button onClick={createNewEntry} className="w-full md:w-auto">New Entry</Button>
+              {draft && (
+                <>
+                  <Button onClick={handleSave} variant="default" className="w-full md:w-auto">Save Entry</Button>
+                  <Button 
+                    onClick={() => draft?.body.trim() || draft?.title.trim() ? setCloseDialogOpen(true) : setDraft(null)}
+                    variant="ghost"
+                    className="text-muted-foreground hover:text-destructive"
+                  >
+                    <X className="w-5 h-5" />
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Search Bar */}
+          {entries.length > 0 && (
+            <div className="mb-4">
+              <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input 
                   placeholder="Search entries..." 
@@ -119,77 +127,84 @@ const Journaling = () => {
                   className="w-full pl-9"
                 />
               </div>
-            )}
-          </div>
-          {draft && (
-            <div className="space-y-4 mb-6">
-              <Input
-                placeholder="Title"
-                value={draft.title}
-                onChange={(e) => setDraft({ ...draft, title: e.target.value })}
-                className="text-xl font-semibold"
-              />
-              
-              {/* Add correction buttons */}
-              <div className="flex gap-2 mb-2">
-                {quickCorrections.map(({ id, label, prompt }) => (
-                  <Button
-                    key={id}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => applyCorrection(prompt, id)}
-                    className="flex items-center gap-1"
-                    disabled={loadingStates[id]}
-                  >
-                    {loadingStates[id] ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Wand2 className="w-4 h-4" />
-                    )}
-                    {label}
-                  </Button>
-                ))}
-              </div>
-              {error && (
-                <p className="text-destructive text-sm mt-1">{error}</p>
-              )}
-
-              <textarea
-                placeholder="Write your thoughts..."
-                value={draft.body}
-                onChange={(e) => setDraft({ ...draft, body: e.target.value })}
-                className="w-full h-40 p-2 border rounded bg-gray-900 text-white"
-              />
             </div>
           )}
-          {entries.length > 0 ? (
-            <>
-              <h2 className="text-2xl font-bold mb-2">Past Entries</h2>
-              <div className="space-y-3 max-h-80 overflow-auto">
-                {filteredEntries
-                  .sort((a, b) => b.id - a.id)
-                  .map((entry) => (
-                    <Card key={entry.id} className="p-4 hover:bg-gray-800 transition-colors cursor-pointer">
-                      <div onClick={() => loadEntry(entry.id)}>
-                        <h3 className="font-bold text-lg">{entry.title || "Untitled"}</h3>
-                        <p className="text-sm text-gray-400">{new Date(entry.date).toLocaleString()}</p>
-                        <p className="mt-1 text-gray-300 line-clamp-2">{entry.body}</p>
-                      </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => setDeleteDialogOpen(entry.id)}
-                        className="mt-2 text-red-500"
-                      >
-                        Delete
-                      </Button>
-                    </Card>
+
+          {/* Main Content Area */}
+          <div className="flex-1 flex flex-col lg:flex-row gap-4 min-h-0 overflow-hidden">
+            {/* Editor Section */}
+            {draft && (
+              <div className="flex-1 flex flex-col space-y-4 h-[40vh] lg:h-auto">
+                <Input
+                  placeholder="Title"
+                  value={draft.title}
+                  onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+                  className="text-xl font-semibold"
+                />
+                
+                <div className="flex flex-wrap gap-2">
+                  {quickCorrections.map(({ id, label, prompt }) => (
+                    <Button
+                      key={id}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => applyCorrection(prompt, id)}
+                      className="flex items-center gap-1"
+                      disabled={loadingStates[id]}
+                    >
+                      {loadingStates[id] ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Wand2 className="w-4 h-4" />
+                      )}
+                      <span className="hidden sm:inline">{label}</span>
+                    </Button>
                   ))}
+                </div>
+
+                {error && (
+                  <p className="text-destructive text-sm">{error}</p>
+                )}
+
+                <textarea
+                  placeholder="Write your thoughts..."
+                  value={draft.body}
+                  onChange={(e) => setDraft({ ...draft, body: e.target.value })}
+                  className="flex-1 p-2 border rounded bg-gray-900 text-white resize-none min-h-0"
+                />
               </div>
-            </>
-          ) : (
-            <p className="text-gray-400">No entries yet.</p>
-          )}
+            )}
+
+            {/* Entries List */}
+            {entries.length > 0 && (
+              <div className={`${draft ? 'lg:w-1/3' : 'w-full'} h-[30vh] lg:h-auto flex flex-col`}>
+                <h2 className="text-xl font-bold mb-2">Past Entries</h2>
+                <ScrollArea className="flex-1">
+                  <div className="space-y-3 pr-4">
+                    {filteredEntries
+                      .sort((a, b) => b.id - a.id)
+                      .map((entry) => (
+                        <Card key={entry.id} className="p-3 md:p-4 hover:bg-gray-800 transition-colors cursor-pointer">
+                          <div onClick={() => loadEntry(entry.id)}>
+                            <h3 className="font-bold text-base md:text-lg">{entry.title || "Untitled"}</h3>
+                            <p className="text-xs md:text-sm text-gray-400">{new Date(entry.date).toLocaleString()}</p>
+                            <p className="mt-1 text-gray-300 text-sm md:text-base line-clamp-2">{entry.body}</p>
+                          </div>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => setDeleteDialogOpen(entry.id)}
+                            className="mt-2 text-red-500 w-full sm:w-auto"
+                          >
+                            Delete
+                          </Button>
+                        </Card>
+                      ))}
+                  </div>
+                </ScrollArea>
+              </div>
+            )}
+          </div>
         </Card>
       </div>
       <ConfirmDialog
