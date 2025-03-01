@@ -20,53 +20,69 @@ function safeParse<T>(data: string): T | null {
 
 export function useJournal() {
   const [entries, setEntries] = useState<JournalEntry[]>(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? safeParse<JournalEntry[]>(stored) || [] : [];
-    }
-    return [];
+    const saved = localStorage.getItem('journal-entries');
+    return saved ? JSON.parse(saved) : [];
   });
-  const [draft, setDraft] = useState<JournalEntry | null>(null);
+
+  const [draft, setDraft] = useState<JournalEntry | null>(() => {
+    const saved = localStorage.getItem('journal-draft');
+    return saved ? JSON.parse(saved) : null;
+  });
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-      } catch (err) {
-        console.error("LocalStorage write error", err);
-      }
-    }
+    localStorage.setItem('journal-entries', JSON.stringify(entries));
   }, [entries]);
 
+  useEffect(() => {
+    if (draft) {
+      localStorage.setItem('journal-draft', JSON.stringify(draft));
+    } else {
+      localStorage.removeItem('journal-draft');
+    }
+  }, [draft]);
+
   const saveEntry = (entry: JournalEntry) => {
-    setEntries((prev) => {
-      const existing = prev.find((e) => e.id === entry.id);
-      if (existing) {
-        return prev.map((e) => (e.id === entry.id ? entry : e));
-      }
-      return [entry, ...prev];
-    });
+    if (entries.find(e => e.id === entry.id)) {
+      setEntries(entries.map(e => e.id === entry.id ? entry : e));
+    } else {
+      setEntries([...entries, entry]);
+    }
+    setDraft(null);
   };
 
   const createNewEntry = () => {
-    const newEntry: JournalEntry = {
-      id: entries.length ? Math.max(...entries.map(e => e.id)) + 1 : 1,
-      title: "",
-      body: "",
-      date: new Date().toISOString(),
-    };
-    setDraft(newEntry);
+    setDraft({
+      id: Date.now(),
+      title: '',
+      body: '',
+      date: new Date().toISOString()
+    });
   };
 
   const loadEntry = (id: number) => {
-    const found = entries.find(e => e.id === id);
-    if (found) setDraft({ ...found });
+    const entry = entries.find(e => e.id === id);
+    if (entry) {
+      setDraft({ ...entry });
+    }
   };
 
   const deleteEntry = (id: number) => {
-    setEntries((prev) => prev.filter(e => e.id !== id));
-    if (draft && draft.id === id) setDraft(null);
+    if (window.confirm('Are you sure you want to delete this entry?')) {
+      setEntries(entries.filter(e => e.id !== id));
+      if (draft?.id === id) {
+        setDraft(null);
+      }
+    }
   };
 
-  return { entries, draft, setDraft, saveEntry, createNewEntry, loadEntry, deleteEntry };
+  return {
+    entries,
+    draft,
+    setDraft,
+    saveEntry,
+    createNewEntry,
+    loadEntry,
+    deleteEntry,
+    setEntries
+  };
 }

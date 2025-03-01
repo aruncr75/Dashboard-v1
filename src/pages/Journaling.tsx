@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card"; // Added missing import
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { useJournal } from "@/hooks/useJournal";
 import { Wand2, X, Search } from "lucide-react"; // Add this import
 import { useGeminiCorrections } from "@/hooks/useGeminiCorrections";
 import { Loader2 } from "lucide-react";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 const Journaling = () => {
   const {
@@ -16,7 +17,8 @@ const Journaling = () => {
     saveEntry,
     createNewEntry,
     loadEntry,
-    deleteEntry
+    deleteEntry,
+    setEntries, // Add this to the destructured hooks
   } = useJournal();
   const [search, setSearch] = useState("");
 
@@ -33,9 +35,33 @@ const Journaling = () => {
     }
   };
 
+  const [closeDialogOpen, setCloseDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<number | null>(null);
+
   const handleClose = () => {
     setDraft(null);
+    setCloseDialogOpen(false);
   };
+
+  const handleDelete = (id: number) => {
+    setEntries(entries.filter(e => e.id !== id));
+    if (draft?.id === id) {
+      setDraft(null);
+    }
+    setDeleteDialogOpen(null);
+  };
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (draft?.body.trim() || draft?.title.trim()) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [draft]);
 
   const quickCorrections = [
     { 
@@ -75,7 +101,7 @@ const Journaling = () => {
               <>
                 <Button onClick={handleSave} variant="default">Save Entry</Button>
                 <Button 
-                  onClick={handleClose}
+                  onClick={() => draft?.body.trim() || draft?.title.trim() ? setCloseDialogOpen(true) : setDraft(null)}
                   variant="ghost"
                   className="text-muted-foreground hover:text-destructive"
                 >
@@ -152,7 +178,7 @@ const Journaling = () => {
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        onClick={() => deleteEntry(entry.id)}
+                        onClick={() => setDeleteDialogOpen(entry.id)}
                         className="mt-2 text-red-500"
                       >
                         Delete
@@ -166,6 +192,21 @@ const Journaling = () => {
           )}
         </Card>
       </div>
+      <ConfirmDialog
+        open={closeDialogOpen}
+        onOpenChange={setCloseDialogOpen}
+        title="Close Entry"
+        description="Are you sure you want to close? Any unsaved changes will be lost."
+        onConfirm={handleClose}
+      />
+
+      <ConfirmDialog
+        open={!!deleteDialogOpen}
+        onOpenChange={() => setDeleteDialogOpen(null)}
+        title="Delete Entry"
+        description="Are you sure you want to delete this entry? This action cannot be undone."
+        onConfirm={() => deleteDialogOpen && handleDelete(deleteDialogOpen)}
+      />
     </Layout>
   );
 };

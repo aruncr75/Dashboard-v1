@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect, useRef } from "react";
 import { sendMessageToGemini } from "@/lib/gemini-api";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 interface ChatMessage {
   id: string;
@@ -30,6 +31,7 @@ const GeminiAI = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [clearDialogOpen, setClearDialogOpen] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -92,16 +94,15 @@ const GeminiAI = () => {
     }
   };
 
-  const clearChat = () => {
-    if (window.confirm("Are you sure you want to clear the chat history?")) {
-      setMessages([{
-        id: "welcome",
-        text: "Hello! I'm Gemini AI. How can I help you with your tasks today?",
-        isUser: false,
-        timestamp: new Date().toISOString()
-      }]);
-      localStorage.removeItem("gemini-chat");
-    }
+  const handleClearChat = () => {
+    setMessages([{
+      id: "welcome",
+      text: "Hello! I'm Gemini AI. How can I help you with your tasks today?",
+      isUser: false,
+      timestamp: new Date().toISOString()
+    }]);
+    localStorage.removeItem("gemini-chat");
+    setClearDialogOpen(false);
   };
 
   return (
@@ -123,7 +124,7 @@ const GeminiAI = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={clearChat}
+            onClick={() => setClearDialogOpen(true)}
             className="text-muted-foreground hover:text-destructive"
             aria-label="Clear chat history"
           >
@@ -190,6 +191,14 @@ const GeminiAI = () => {
             </Button>
           </form>
         </Card>
+
+        <ConfirmDialog
+          open={clearDialogOpen}
+          onOpenChange={setClearDialogOpen}
+          title="Clear Chat History"
+          description="Are you sure you want to clear all messages? This action cannot be undone."
+          onConfirm={handleClearChat}
+        />
       </div>
     </Layout>
   );
