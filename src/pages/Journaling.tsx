@@ -103,6 +103,17 @@ const Journaling = () => {
     }
   };
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <Layout>
       <div className="h-[calc(100vh-4rem)] p-2 md:p-4 pb-20 md:pb-4">
@@ -143,7 +154,7 @@ const Journaling = () => {
           )}
 
           {/* Main Content Area */}
-          <div className="flex-1 flex flex-col lg:flex-row gap-4 min-h-0 overflow-hidden">
+          <div className="flex-1 flex flex-col lg:flex-row gap-4 min-h-0 ">
             {/* Editor Section */}
             {draft && (
               <div className="flex-1 flex flex-col space-y-4 h-[40vh] lg:h-auto">
@@ -183,8 +194,8 @@ const Journaling = () => {
                   placeholder="Write your thoughts..."
                   value={draft?.body}
                   onChange={(e) => setDraft({ ...draft!, body: e.target.value })}
-                  className="flex-1 p-3 rounded bg-gray-950 text-white resize-none min-h-[200px] overflow-auto
-                    border-2 border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary
+                  className="flex-1 p-3 rounded bg-gray-950 text-white resize-none min-h-[200px] overflow-autoide on mobile when draft is active */}
+                    border-2 border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary!draft || window.innerWidth >= 1024) && (
                     transition-all duration-200 placeholder:text-gray-500"
                   style={{ 
                     whiteSpace: 'pre-wrap',
@@ -195,7 +206,7 @@ const Journaling = () => {
             )}
 
             {/* Entries List */}
-            {entries.length > 0 && (
+            {entries.length > 0 && (!draft || !isMobile) && (
               <div className={`${draft ? 'lg:w-1/3' : 'w-full'} h-[30vh] lg:h-auto flex flex-col`}>
                 <h2 className="text-xl font-bold mb-2">Past Entries</h2>
                 <ScrollArea className="flex-1">
